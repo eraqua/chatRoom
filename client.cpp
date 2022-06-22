@@ -9,6 +9,7 @@
 #include<pthread.h>
 #include<iostream>
 #include <cstring>
+#include <ctime>
 #define MAX 10
 using namespace std;
 
@@ -22,7 +23,14 @@ void* receive(void* arg){
     while(true){
         char recvBuf[1024] = {};
         int reLen = recv(sock, recvBuf, 1024, 0);
-        cout<<endl<<recvBuf<<endl;
+        if(reLen>0){
+        time_t result = time(NULL);
+        cout<<recvBuf<<"\t"<<asctime(localtime(&result));
+        }
+        else{
+        printf("the server is unavaliable!");
+        break;
+        }
     }
     pthread_exit(NULL);
 }
@@ -45,6 +53,8 @@ int main()
     write(sock,(char*)name.c_str(),name.length());
 
     printf("connect sucessfully!\n");
+    printf("start to chat with friends\n");
+    printf("********************************\n");
 
     void* temp=&sock;
     pthread_t th;

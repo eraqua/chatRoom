@@ -8,6 +8,7 @@
 #include <string.h>
 #include<pthread.h>
 #include<iostream>
+#include <ctime>
 #include<vector>
 using namespace std;
 
@@ -59,12 +60,13 @@ void * HandlerRequest(void *arg)
     int new_sock=t->sock;
     string idname=t->name;
     while(true){
+        time_t result= time(NULL);
         char recvBuf[4024] = {};
         int rRes=recv(new_sock, recvBuf, 4024, 0);
         if(rRes>0)
-            cout<<idname<<"(socketID-"<<new_sock<<")  :"<<recvBuf<<"\n";
+            cout<<idname<<"(socketID-"<<new_sock<<"):\t"<<recvBuf<<"\t"<<asctime(localtime(&result));
         else{
-            cout<<idname<<"(socketID: "<<new_sock<<")"<<" is log out;current online:"<<socks.size()-1<<endl;
+            cout<<idname<<"(socketID-"<<new_sock<<")"<<" is log out;\tcurrent online:"<<socks.size()-1<<"\t"<<asctime(localtime(&result));
             //bug fixed:remove expired sock;
 
             lastmessage=idname+" is log out";
@@ -108,11 +110,9 @@ int main()
         if(new_sock>0){
             recv(new_sock, recvBuf, 4024, 0);
 
-            cout<<"----------------------"<<endl;
-            cout<<recvBuf<<" is connected."<<"( socket: "<<new_sock<<" )\n";
+            cout<<recvBuf<<" has connected."<<"( socket: "<<new_sock<<" )--";
             socks.push_back(new_sock);
             cout<<socks.size()<<" clients connected."<<endl;
-            cout<<"----------------------"<<endl;
         }
         else{cout<<"Failed to accept."<<endl;}
         user t;
