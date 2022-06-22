@@ -22,6 +22,8 @@ vector<int> socks;          //save the clients' socks
 //
 int start_up(const char* local_ip,int local_port)
 {
+
+    cout<<"*************************"<<endl;
 	int sock = socket(AF_INET,SOCK_STREAM,0);//1.build socket
 	if(sock < 0){
 		perror("socket");
@@ -39,13 +41,15 @@ int start_up(const char* local_ip,int local_port)
 		perror("bind");
 		exit(2);
 	}
-	else{cout<<"Bind success."<<endl;}
+	else{cout<<"Bind success.\n";}
 	if(listen(sock,MAX) < 0)
 	{
 		perror("listen");
 		exit(3);
 	}
-	else{cout<<"Listenning."<<endl;}
+	else{cout<<"Listenning.\nstart successfully!\n"<<"ip:\t"<<LOCAL_IP<<"\nport:\t"<<LOCAL_PORT<<endl;}
+    cout<<"*************************"<<endl;
+
 	return sock;
 }
 void * HandlerRequest(void *arg)
@@ -58,10 +62,17 @@ void * HandlerRequest(void *arg)
         char recvBuf[4024] = {};
         int rRes=recv(new_sock, recvBuf, 4024, 0);
         if(rRes>0)
-            cout<<idname<<":"<<recvBuf<<"\t( socketID: "<<new_sock<<" )\n";
+            cout<<idname<<"(socketID-"<<new_sock<<")  :"<<recvBuf<<"\n";
         else{
-            cout<<idname<<" is out."<<endl;
+            cout<<idname<<"(socketID: "<<new_sock<<")"<<" is log out;current online:"<<socks.size()-1<<endl;
             //bug fixed:remove expired sock;
+
+            lastmessage=idname+" is log out";
+        for(auto i:socks){//send last message to non-current socket
+            if(i!=new_sock){
+                send(i,(char*)lastmessage.c_str(),lastmessage.length(),0);
+            }
+        }
             for(auto it = socks.begin();it!=socks.end();){
                 if(*it == new_sock)
                 socks.erase(it);
@@ -96,10 +107,12 @@ int main()
         char recvBuf[4024] = {};
         if(new_sock>0){
             recv(new_sock, recvBuf, 4024, 0);
-            cout<<endl<<recvBuf<<" is connected."<<"( socket: "<<new_sock<<" )"<<endl;
+
             cout<<"----------------------"<<endl;
+            cout<<recvBuf<<" is connected."<<"( socket: "<<new_sock<<" )\n";
             socks.push_back(new_sock);
             cout<<socks.size()<<" clients connected."<<endl;
+            cout<<"----------------------"<<endl;
         }
         else{cout<<"Failed to accept."<<endl;}
         user t;

@@ -35,7 +35,7 @@ int main()
     server.sin_port = htons(LOCAL_PORT);
     server.sin_addr.s_addr = inet_addr(LOCAL_IP);
     string name;
-    cout<<"What is your name?";
+    cout<<"What is your name?\n";
     getline(cin,name);
     if(connect(sock,(struct sockaddr *)&server,sizeof(server)) < 0)
     {
@@ -44,9 +44,12 @@ int main()
     }
     write(sock,(char*)name.c_str(),name.length());
 
+    printf("connect sucessfully!\n");
+
     void* temp=&sock;
     pthread_t th;
     pthread_create(&th,NULL,receive,temp);
+
     while(true){
         string s;
         getline(cin,s);
