@@ -62,9 +62,12 @@ void * HandlerRequest(void *arg)
         else{
             cout<<idname<<" is out."<<endl;
             //bug fixed:remove expired sock;
-            for(auto it = socks.begin();it!=socks.end();++it){
+            for(auto it = socks.begin();it!=socks.end();){
                 if(*it == new_sock)
                 socks.erase(it);
+                else{
+                    it++;
+                }
             }
             break;
         }
