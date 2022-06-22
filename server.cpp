@@ -61,6 +61,11 @@ void * HandlerRequest(void *arg)
             cout<<idname<<":"<<recvBuf<<"\t( socketID: "<<new_sock<<" )\n";
         else{
             cout<<idname<<" is out."<<endl;
+            //bug fixed:remove expired sock;
+            for(auto it = socks.begin();it!=socks.end();++it){
+                if(*it == new_sock)
+                socks.erase(it);
+            }
             break;
         }
         lastmessage=idname+": "+recvBuf;
