@@ -24,3 +24,4 @@ Besides,you can use different command to control the application.
 1. " /recall ":you can recall your recent sent message;
 2. " /mute + username "you can use this command to avoid recieving the meaasge from the target user;
 3. " /save ":you can save the recieved chat history in the local hard disk;
+4. " checkin : you can checkin in the group every hours(or other time which designed by server).after the checkin,the user can get certains of coins.
