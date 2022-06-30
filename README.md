@@ -1,4 +1,4 @@
-# Chatoom
+# ChatRoom
 
 ## How to run it
 
